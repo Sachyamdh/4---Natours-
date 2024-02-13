@@ -1,0 +1,15 @@
+# Ignore configuration files
+config.env
+
+# Ignore .env files
+.env
+*.local
+
+# Ignore node_modules directory
+node_modules/
+dist
+dist-ssr
+
+# Ignore devdata/data folder
+devdata/data/
+
