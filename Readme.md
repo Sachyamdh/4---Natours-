@@ -2,7 +2,7 @@
 
 ## Overview
 
-Natours is a tours app that allows users to create, update, and delete their tours, as well as rate them.
+Natours is a tours app that allows users to create, update, and delete their tours, as well as rate them.The following repository a copy of an app from an online course.
 
 ## Dependencies
 - nodemon-3.0.3
