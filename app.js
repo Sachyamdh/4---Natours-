@@ -10,6 +10,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // app.use("/api/v1/users");
-app.use("api/v1/tours", Router);
+app.use("/api/v1/tours", Router);
 
 module.exports = app;

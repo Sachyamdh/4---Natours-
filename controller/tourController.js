@@ -1,38 +1,27 @@
 const Tour = require("../models/toursModel");
 
-
-const checkId = async (req, res, next, val) => {
-  console.log(`The Tour ID is ${val}`);
-
-
-  next();
-};
-
-const checkBody = async (req, res, next) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Missing Name or Price",
-    });
-  }
-};
-
 const getAllTours = async (req, res) => {
   console.log(req.requestTime);
-
 };
 
 const getTour = async (req, res) => {
   console.log(req.params);
   const id = req.params.id * 1;
-
 };
 
 const createTour = async (req, res) => {
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+  try {
+    const newTour = await Tour.create(req.body);
 
-
+    res.status(201).json({
+      status: "success",
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({ status: "Failed", message: err.message });
+  }
 };
 
 const updateTour = async (req, res) => {
@@ -56,7 +45,5 @@ module.exports = {
   updateTour,
   createTour,
   getAllTours,
-  checkId,
-  checkBody,
   getTour,
 };
