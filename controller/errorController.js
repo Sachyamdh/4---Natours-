@@ -8,10 +8,14 @@ const handleCastError = (err) => {
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
-    error: err,
+    error: err.error,
     message: err.message,
     stack: err.stack,
   });
+};
+
+const handleDuplicateEntry = (err) => {
+  const message = `Duplcate field value: x, Please use another value`;
 };
 
 const sendErrorProduction = (err, res) => {
@@ -41,6 +45,8 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
     let error = { ...err };
     if (error.name === "CastError") error = handleCastError(err);
+    if (err.code === 11000) error = handleDuplicateEntry(err);
+
     sendErrorProduction(error, res);
   }
 };

@@ -4,6 +4,6 @@ exports.tryCatch = (controller) => async (req, res, next) => {
   try {
     await controller(req, res);
   } catch (err) {
-    return next(new AppError(err.message, 404));
+    return next(new AppError(err, err.message, 404));
   }
 };
