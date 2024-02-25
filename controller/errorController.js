@@ -15,15 +15,18 @@ const sendErrorDev = (err, res) => {
 };
 
 const handleDuplicateEntry = (err) => {
+  const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
   const message = `Duplcate field value: x, Please use another value`;
+  return new AppError(err.error, message, 400);
 };
 
 const sendErrorProduction = (err, res) => {
+  // console.log(err);
   //operational, trusted error: send message. These are errors from our hard code
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
-      message: err.messsage,
+      message: err.message,
     });
   }
   //programming or other errors send minimum message. These are errors from our third party app
@@ -45,7 +48,7 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
     let error = { ...err };
     if (error.name === "CastError") error = handleCastError(err);
-    if (err.code === 11000) error = handleDuplicateEntry(err);
+    if (error.error.code === 11000) error = handleDuplicateEntry(err);
 
     sendErrorProduction(error, res);
   }

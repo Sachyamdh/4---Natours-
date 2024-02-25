@@ -32,8 +32,9 @@ const getAllTours = async (req, res) => {
 };
 
 const getTour = async (req, res) => {
-  const tour = await Tour.findById(req.params.id);
 
+  const tour = await Tour.findById(req.params.id);
+ 
   res.status(200).json({
     message: "success",
     data: {

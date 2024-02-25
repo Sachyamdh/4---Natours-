@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/api/v1/tours", Router);
 
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find the ${req.url}`, 404));
+  next(new AppError("No asscosiated routes",`Can't find the ${req.url}`, 404));
 });
 
 app.use(errorController);
