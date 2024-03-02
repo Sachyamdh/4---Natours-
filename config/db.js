@@ -22,7 +22,7 @@ const tours = JSON.parse(
 const importData = async () => {
   try {
     await Tour.create(tours);
-    console.log('Data successfully loaded!');
+    console.log("Data successfully loaded!");
   } catch (err) {
     console.log(err);
   }
@@ -33,16 +33,16 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await Tour.deleteMany();
-    console.log('Data successfully deleted!');
+    console.log("Data successfully deleted!");
   } catch (err) {
     console.log(err);
   }
   process.exit();
 };
 
-if (process.argv[2] === '--import') {
+if (process.argv[2] === "--import") {
   importData();
-} else if (process.argv[2] === '--delete') {
+} else if (process.argv[2] === "--delete") {
   deleteData();
 }
 module.exports = { dbConnect };
