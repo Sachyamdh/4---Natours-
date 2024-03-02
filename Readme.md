@@ -12,3 +12,6 @@ Natours is a tours app that allows users to create, update, and delete their tou
 - nodemailer-6.9.9
 - express-4.18.2
 - morgan-1.10
+
+
+# Readme to be updated in the future updates
