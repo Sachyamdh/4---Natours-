@@ -1,8 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
-const Router = require("./routes/toursRoutes");
+const tourRouter = require("./routes/toursRoutes");
 const AppError = require("./middleware/errorHandler");
 const errorController = require("./controller/errorController");
+const userRouter = require("./routes/authRoutes");
 
 const app = express();
 require("express-async-errors");
@@ -19,7 +20,8 @@ app.use((req, res, next) => {
 });
 
 // app.use("/api/v1/users");
-app.use("/api/v1/tours", Router);
+app.use("/api/v1/auth/", userRouter);
+app.use("/api/v1/tours", tourRouter);
 
 app.all("*", async (req, res) => {
   throw new AppError("No asscosiated routes", `Can't find the ${req.url}`, 404);

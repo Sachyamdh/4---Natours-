@@ -20,8 +20,8 @@ const handleDuplicateEntry = async (err) => {
   throw new AppError(err.error, message, 400);
 };
 
-const sendErrorProduction = (err, res) => {
-  console.log(err);
+const sendErrorProduction = async (err, res) => {
+
   //operational, trusted error: send message. These are errors from our hard code
   if (err.isOperational) {
     res.status(err.statusCode).json({
@@ -39,7 +39,7 @@ const sendErrorProduction = (err, res) => {
   }
 };
 
-module.exports = (err, req, res, next) => {
+module.exports = async (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
   if (process.env.NODE_ENV === "development") {
