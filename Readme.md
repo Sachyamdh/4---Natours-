@@ -1,5 +1,5 @@
 # 4-Natours
-
+The following repository is a server side website that allows users to create, update, and delete their tours, as well as rate them. The project was built using nodeJS and its libraries. 
 ## Overview
 
 Natours is a tours app that allows users to create, update, and delete their tours, as well as rate them.The following repository a copy of an app from an online course.

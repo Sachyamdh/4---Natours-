@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
@@ -25,13 +26,37 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please enter your password"],
     minlength: [8, "Password msut be 8 characters long"],
+    select: false,
   },
   confirm_password: {
     type: String,
     required: [true, "Please confirm your password"],
     minlength: [8, "Password msut be 8 characters long"],
+    validate: {
+      //This only works on CREATE and SAVE!!!
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: "The passwords do not match",
+    },
   },
 });
 
+userSchema.pre("save", async function (next) {
+  //only run the function if password was actually modified
+  if (!this.isModified("password")) return next();
+
+  //encypting the password
+  this.password = await bcrypt.hash(this.password, 10);
+
+  this.confirm_password = undefined;
+});
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return bcrypt.compare(candidatePassword, userPassword);
+};
 const User = mongoose.model("User", userSchema);
 module.exports = User;
