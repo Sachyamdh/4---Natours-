@@ -16,6 +16,7 @@ const signUp = async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     confirm_password: req.body.confirm_password,
+    role: req.body.role,
   });
 
   const token = signToken(newUser._id);
@@ -86,6 +87,24 @@ const protect = tryCatch(async (req, res, next) => {
     throw new AppError("Authorization Failed", "Password was changed", 401);
   }
 
+  //granting access
+  req.user = freshUser;
   next();
 });
-module.exports = { signUp, login, protect };
+
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    //roles  can be either of these "user", "guide", "lead-guide", "admin"
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError(
+          "Authorizarion Error",
+          "You do not have access to perform this action",
+          403
+        )
+      );
+    }
+    next();
+  };
+};
+module.exports = { signUp, login, protect, restrictTo };

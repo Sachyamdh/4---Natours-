@@ -22,6 +22,21 @@ const userSchema = new Schema({
   photo: {
     type: String,
   },
+  role: {
+    type: String,
+    enum: {
+      values: ["user", "guide", "lead-guide", "admin"],
+      message: "User can be one of these: user, guide, lead-guide and admin",
+    },
+    default: "user",
+    set: function (value) {
+      if (value) {
+        return value;
+      } else {
+        return "user";
+      }
+    },
+  },
   password: {
     type: String,
     required: [true, "Please enter your password"],
@@ -65,7 +80,6 @@ userSchema.methods.correctPassword = async function (
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
-    console.log(this.passwordChangedAt, JWTTimestamp);
     const changedTimeStamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
       10
