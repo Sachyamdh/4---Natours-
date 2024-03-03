@@ -66,7 +66,7 @@ const forgotPassword = async (req, res, next) => {
   if (!user) {
     return next(
       new AppError(
-        "Authorization Error",
+        "ValidationError",
         "There is no user with the associated email address",
         404
       )
@@ -120,7 +120,7 @@ const resetPassword = tryCatch(async (req, res, next) => {
   });
   if (!user) {
     throw new AppError(
-      "Invalid Token",
+      "ValidationError",
       "The token you provided is invalid",
       400
     );
@@ -128,6 +128,7 @@ const resetPassword = tryCatch(async (req, res, next) => {
   // if token has not expired reset the password
   user.password = req.body.password;
   user.confirm_password = req.body.confirm_password;
+  user.passwordChangedAt = Date.now();
   user.passwordResetToken = undefined;
   user.passwordResetExpire = undefined;
 
@@ -135,6 +136,13 @@ const resetPassword = tryCatch(async (req, res, next) => {
   //update changed password at propertu of the user
   const token = signToken(user._id);
   //   log the user in and send jwt
+  res.status(200).json({
+    status: 200,
+    token,
+    data: {
+      user: user,
+    },
+  });
 });
 
 module.exports = { signUp, login, forgotPassword, resetPassword };
