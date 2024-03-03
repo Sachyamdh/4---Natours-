@@ -10,7 +10,9 @@ const {
   getMonthlyPlan,
 } = require("../controller/tourController");
 const { tryCatch } = require("../utils/tryCatch");
+const { protect } = require("../controller/authenticationController");
 const Router = express.Router();
+
 
 // Router.param("id", checkId);
 Router.route("/top-5-cheap").get(
@@ -19,7 +21,7 @@ Router.route("/top-5-cheap").get(
 );
 Router.route("/tour-stats").get(tryCatch(tourStats));
 Router.route("/monthly-plan/:year").get(tryCatch(getMonthlyPlan));
-Router.route("/").get(tryCatch(getAllTours)).post(tryCatch(createTour));
+Router.route("/").get(protect,tryCatch(getAllTours)).post(tryCatch(createTour));
 Router.route("/:id")
   .get(tryCatch(getTour))
   .patch(tryCatch(updateTour))

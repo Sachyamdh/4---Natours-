@@ -14,6 +14,11 @@ const sendErrorDev = (err, res) => {
   });
 };
 
+const handleJWTError = (err) =>
+  new AppError(err, "Invalid Token please enter again", 401);
+
+const handleExpiryError = (err) => new AppError(err, "Login Timeout", 401);
+
 const handleDuplicateEntry = async (err) => {
   const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
   const message = `Duplcate field value: x, Please use another value`;
@@ -21,7 +26,6 @@ const handleDuplicateEntry = async (err) => {
 };
 
 const sendErrorProduction = async (err, res) => {
-
   //operational, trusted error: send message. These are errors from our hard code
   if (err.isOperational) {
     res.status(err.statusCode).json({
@@ -49,10 +53,12 @@ module.exports = async (err, req, res, next) => {
     if (error.statusCode === 500) {
       sendErrorProduction(error, res);
     } else {
-      console.log("yeta", error.error);
       if (error.error.name === "CastError") error = handleCastError(err.error);
       if (error.error.code === 11000) error = handleDuplicateEntry(err.error);
-
+      if (error.error.name === "JsonWebTokenError")
+        error = handleJWTError(err.error);
+      if (error.error.name === "TokenExpiredError")
+        error = handleExpiryError(err.error);
       sendErrorProduction(error, res);
     }
   }
