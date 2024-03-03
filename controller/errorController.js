@@ -5,6 +5,13 @@ const handleCastError = (err) => {
   return new AppError(err, message, 400);
 };
 
+const handleValidationErrorDB = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+
+  const message = `Invalid input data. ${errors.join(". ")}`;
+  return new AppError("Validation Error", message, 400);
+};
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -25,7 +32,7 @@ const handleDuplicateEntry = async (err) => {
   throw new AppError(err.error, message, 400);
 };
 
-const sendErrorProduction = async (err, res) => {
+const sendErrorProduction = (err, res) => {
   //operational, trusted error: send message. These are errors from our hard code
   if (err.isOperational) {
     res.status(err.statusCode).json({
@@ -55,6 +62,8 @@ module.exports = async (err, req, res, next) => {
     } else {
       if (error.error.name === "CastError") error = handleCastError(err.error);
       if (error.error.code === 11000) error = handleDuplicateEntry(err.error);
+      if (error.name === "ValidationError")
+        error = handleValidationErrorDB(error);
       if (error.error.name === "JsonWebTokenError")
         error = handleJWTError(err.error);
       if (error.error.name === "TokenExpiredError")

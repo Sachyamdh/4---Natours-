@@ -3,7 +3,8 @@ const morgan = require("morgan");
 const tourRouter = require("./routes/toursRoutes");
 const AppError = require("./middleware/errorHandler");
 const errorController = require("./controller/errorController");
-const userRouter = require("./routes/authRoutes");
+const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 require("express-async-errors");
@@ -18,8 +19,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/api/v1/users");
-app.use("/api/v1/auth/", userRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/auth/", authRouter);
 app.use("/api/v1/tours", tourRouter);
 
 app.all("*", async (req, res) => {

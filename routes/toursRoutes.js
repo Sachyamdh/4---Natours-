@@ -10,10 +10,7 @@ const {
   getMonthlyPlan,
 } = require("../controller/tourController");
 const { tryCatch } = require("../utils/tryCatch");
-const {
-  protect,
-  restrictTo,
-} = require("../controller/authenticationController");
+const { protect, restrictTo } = require("../middleware/authMiddleware");
 const Router = express.Router();
 
 // Router.param("id", checkId);
