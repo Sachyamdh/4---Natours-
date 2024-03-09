@@ -1,7 +1,8 @@
 const fs = require("fs");
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const Tour = require("../models/toursModel");
-
+dotenv.config({ path: "config.env" });
 const db = process.env.DATABASE.replace(
   "<password>",
   process.env.DATABASE_PASSWORD
@@ -16,11 +17,12 @@ const dbConnect = async () => {
   }
 };
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours.json`)
 );
 
 const importData = async () => {
   try {
+    await dbConnect();
     await Tour.create(tours);
     console.log("Data successfully loaded!");
   } catch (err) {
@@ -32,7 +34,8 @@ const importData = async () => {
 // DELETE ALL DATA FROM DB
 const deleteData = async () => {
   try {
-    await Tour.deleteMany();
+    await dbConnect();
+    await Tour.deleteMany({}, { maxTimeMS: 30000 });
     console.log("Data successfully deleted!");
   } catch (err) {
     console.log(err);
@@ -41,8 +44,10 @@ const deleteData = async () => {
 };
 
 if (process.argv[2] === "--import") {
+
   importData();
 } else if (process.argv[2] === "--delete") {
+
   deleteData();
 }
 module.exports = { dbConnect };

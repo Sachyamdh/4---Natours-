@@ -25,8 +25,8 @@ const tourSchema = new Schema({
     type: String,
     required: [true, "A tour must have a rating"],
     enum: {
-      values: ["easy", "medium", "hard"],
-      message: "Difficulty can be one of the three: easy,medium,hard",
+      values: ["easy", "medium", "difficult"],
+      message: "Difficulty can be one of the three: easy,medium,difficult",
     },
   },
   ratingsAverage: {
@@ -72,6 +72,34 @@ const tourSchema = new Schema({
     select: false,
   },
   startDates: [Date],
+  secretTour: {
+    type: Boolean,
+    default: false,
+  },
+  starLocation: {
+    // GeoJSON
+    type: {
+      type: String,
+      default: "Point",
+      enum: ["Point"],
+    },
+    coordinates: [Number],
+    address: String,
+    description: String,
+  },
+  locations: [
+    {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+      day: Number,
+    },
+  ],
 });
 
 tourSchema.pre("save", function (next) {

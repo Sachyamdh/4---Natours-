@@ -146,3 +146,4 @@ const resetPassword = tryCatch(async (req, res, next) => {
 });
 
 module.exports = { signUp, login, forgotPassword, resetPassword };
+
