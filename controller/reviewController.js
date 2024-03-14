@@ -6,8 +6,6 @@ const getReviews = async (req, res) => {
   const { tour } = req?.params;
 
   const review = await Review.find({ tour })
-    .populate({ path: "users", select: "name" })
-    .exec();
   res.status(200).json({
     status: "sucess",
     data: {
