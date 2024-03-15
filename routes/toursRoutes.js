@@ -11,6 +11,7 @@ const {
 } = require("../controller/tourController");
 const { tryCatch } = require("../utils/tryCatch");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
+const { getReviews, postReviews } = require("../controller/reviewController");
 const Router = express.Router();
 
 // Router.param("id", checkId);
@@ -27,5 +28,11 @@ Router.route("/:id")
   .get(protect, tryCatch(getTour))
   .patch(protect, tryCatch(updateTour))
   .delete(protect, restrictTo("admin", "lead-guide"), tryCatch(deleteTour));
+
+Router.route("/:tourId/reviews").post(
+  protect,
+  restrictTo("user"),
+  tryCatch(postReviews)
+);
 
 module.exports = Router;
