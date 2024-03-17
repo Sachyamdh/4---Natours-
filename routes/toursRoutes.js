@@ -11,7 +11,10 @@ const {
 } = require("../controller/tourController");
 const { tryCatch } = require("../utils/tryCatch");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
+const reviewRouter = require("./reviewRoutes");
 const Router = express.Router();
+
+Router.use("/:tourId/reviews", reviewRouter);
 
 // Router.param("id", checkId);
 Router.route("/top-5-cheap").get(
