@@ -11,8 +11,10 @@ const {
 } = require("../controller/tourController");
 const { tryCatch } = require("../utils/tryCatch");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
-const { getReviews, postReviews } = require("../controller/reviewController");
+const reviewRouter = require("./reviewRoutes");
 const Router = express.Router();
+
+Router.use("/:tourId/reviews", reviewRouter);
 
 // Router.param("id", checkId);
 Router.route("/top-5-cheap").get(
@@ -28,11 +30,5 @@ Router.route("/:id")
   .get(protect, tryCatch(getTour))
   .patch(protect, tryCatch(updateTour))
   .delete(protect, restrictTo("admin", "lead-guide"), tryCatch(deleteTour));
-
-Router.route("/:tourId/reviews").post(
-  protect,
-  restrictTo("user"),
-  tryCatch(postReviews)
-);
 
 module.exports = Router;

@@ -1,6 +1,6 @@
 const express = require("express");
 const { tryCatch } = require("../utils/tryCatch");
-const Router = express.Router();
+const Router = express.Router({ mergeParams: true });
 const { getReviews, postReviews } = require("../controller/reviewController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
