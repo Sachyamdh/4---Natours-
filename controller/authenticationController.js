@@ -44,7 +44,6 @@ const login = async (req, res) => {
 
   //check if the the user exists
   const user = await User.findOne({ email }).select("+password");
-
   if (!user || !(await user.correctPassword(password, user.password))) {
     throw new AppError("Invalid Credentials", "Invalid email or password", 400);
   }
@@ -145,5 +144,36 @@ const resetPassword = tryCatch(async (req, res, next) => {
   });
 });
 
-module.exports = { signUp, login, forgotPassword, resetPassword };
+const updatePassword = async (req, res) => {
+  //get the user from the collection
+  const user = await User.findById(req?.params.id).select("+password");
+  console.log(user);
+  //chek if the Posted password is correct
+  if (!(await user.correctPassword(req?.body.passwordCurrent, user.password))) {
+    throw new AppError("Authorization Error", "Invalid password", 404);
+  }
+  //if the password is correct update the password
+  user.password = req?.body.password;
+  user.confirm_password = req?.body.confirm_password;
 
+  await user.save();
+
+  //login the password
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
+module.exports = {
+  signUp,
+  login,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
+};
